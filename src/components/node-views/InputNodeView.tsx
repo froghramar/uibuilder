@@ -1,5 +1,7 @@
 import { NodeViewWrapper } from '@tiptap/react'
+import { Editor } from '@tiptap/core'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
+import { TextSelection } from '@tiptap/pm/state'
 import { useCallback } from 'react'
 import clsx from 'clsx'
 import './InputNodeView.css'
@@ -8,9 +10,25 @@ interface InputNodeViewProps {
   node: ProseMirrorNode
   updateAttributes: (attrs: Record<string, any>) => void
   selected?: boolean
+  getPos?: () => number
+  editor: Editor
 }
 
-const InputNodeView = ({ node, updateAttributes, selected = false }: InputNodeViewProps) => {
+const InputNodeView = ({ node, updateAttributes, selected = false, getPos, editor }: InputNodeViewProps) => {
+
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!editor || !getPos) return
+
+    const pos = getPos()
+    if (pos === undefined || pos === null) return
+
+    const { state } = editor
+    const { doc } = state
+    const selection = TextSelection.near(doc.resolve(pos))
+    const tr = state.tr.setSelection(selection)
+    editor.view.dispatch(tr)
+  }, [editor, getPos])
   const { label, placeholder, value, type, required, disabled } = node.attrs
 
   const handleValueChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,6 +45,7 @@ const InputNodeView = ({ node, updateAttributes, selected = false }: InputNodeVi
       data-selected={selected}
       data-id={node.attrs.id}
       data-type="ui-component"
+      onClick={handleClick}
     >
       <div className="ui-input-container">
         {selected ? (
@@ -56,7 +75,10 @@ const InputNodeView = ({ node, updateAttributes, selected = false }: InputNodeVi
             'ui-input--disabled': disabled,
           })}
           contentEditable={false}
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation()
+            handleClick(e)
+          }}
         />
       </div>
     </NodeViewWrapper>

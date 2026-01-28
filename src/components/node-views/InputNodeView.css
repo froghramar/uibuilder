@@ -1,6 +1,7 @@
 .ui-input-wrapper {
   margin: 8px 0;
   position: relative;
+  cursor: pointer;
 }
 
 .ui-input-wrapper[data-selected="true"] {

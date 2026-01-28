@@ -10,7 +10,7 @@ interface PropertyPanelProps {
 const PropertyPanel = ({ editor }: PropertyPanelProps) => {
   const { selectedNode, selectedNodeId } = useComponentSelection(editor)
 
-  if (!selectedNode || !selectedNodeId || !editor) {
+  if (!selectedNode || !editor) {
     return (
       <div className="property-panel">
         <div className="property-panel-header">
@@ -23,7 +23,17 @@ const PropertyPanel = ({ editor }: PropertyPanelProps) => {
     )
   }
 
-  const componentDef = componentRegistry.get(selectedNode.type.name)
+  // Try to get component by node type name first, then by checking all components
+  let componentDef = componentRegistry.get(selectedNode.type.name)
+  
+  // If not found by type name, search by extension name
+  if (!componentDef) {
+    const allComponents = componentRegistry.getAll()
+    componentDef = allComponents.find(
+      def => def.extension.name === selectedNode.type.name
+    )
+  }
+  
   const metadata = componentDef?.metadata
 
   const updateAttribute = (key: string, value: any) => {
@@ -31,7 +41,12 @@ const PropertyPanel = ({ editor }: PropertyPanelProps) => {
 
     let targetPos: number | null = null
     state.doc.descendants((node, pos) => {
-      if (node.attrs.id === selectedNodeId) {
+      // Match by ID if available, otherwise match by type and position
+      if (selectedNodeId && node.attrs.id === selectedNodeId) {
+        targetPos = pos
+        return false
+      } else if (!selectedNodeId && node.type.name === selectedNode.type.name) {
+        // Fallback: match by type if no ID
         targetPos = pos
         return false
       }
@@ -160,17 +175,43 @@ const PropertyPanel = ({ editor }: PropertyPanelProps) => {
     }
   }
 
+  // If no metadata found, still show the properties but without schema
+  if (!metadata) {
+    return (
+      <div className="property-panel">
+        <div className="property-panel-header">
+          <h3>Properties</h3>
+          <p className="property-panel-component-name">{selectedNode.type.name}</p>
+        </div>
+        <div className="property-panel-content">
+          {Object.entries(selectedNode.attrs).map(([key, value]) => {
+            if (key === 'id') return null
+            
+            const label = key.charAt(0).toUpperCase() + key.slice(1)
+
+            return (
+              <div key={key} className="property-field">
+                <label className="property-label">{label}</label>
+                {renderPropertyInput(key, value)}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="property-panel">
       <div className="property-panel-header">
         <h3>Properties</h3>
-        <p className="property-panel-component-name">{metadata?.name || selectedNode.type.name}</p>
+        <p className="property-panel-component-name">{metadata.name || selectedNode.type.name}</p>
       </div>
       <div className="property-panel-content">
         {Object.entries(selectedNode.attrs).map(([key, value]) => {
           if (key === 'id') return null
           
-          const schema = metadata?.propSchema?.[key]
+          const schema = metadata.propSchema?.[key]
           const label = schema?.label || key.charAt(0).toUpperCase() + key.slice(1)
 
           return (

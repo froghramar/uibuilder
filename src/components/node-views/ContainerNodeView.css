@@ -2,6 +2,7 @@
   margin: 8px 0;
   position: relative;
   min-height: 60px;
+  cursor: pointer;
 }
 
 .ui-container-wrapper[data-selected="true"] {

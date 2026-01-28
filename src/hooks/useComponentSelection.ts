@@ -23,13 +23,43 @@ export const useComponentSelection = (editor: Editor | null) => {
       let node: ProseMirrorNode | null = null
       let nodeId: string | null = null
 
-      // Check if we're inside a UI component node
-      for (let depth = $anchor.depth; depth > 0; depth--) {
-        const nodeAtDepth = $anchor.node(depth)
-        if (nodeAtDepth.type.name !== 'doc' && nodeAtDepth.type.name !== 'paragraph') {
-          node = nodeAtDepth
-          nodeId = nodeAtDepth.attrs.id || null
-          break
+      // List of UI component node types
+      const uiComponentTypes = ['button', 'input', 'textarea', 'select', 'card', 'container']
+
+      // For atom nodes, they are children of paragraphs
+      // Check the parent's children to find component nodes
+      const parent = $anchor.parent
+      if (parent) {
+        parent.forEach((childNode, offset) => {
+          if (uiComponentTypes.includes(childNode.type.name)) {
+            node = childNode
+            nodeId = childNode.attrs.id || null
+          }
+        })
+      }
+
+      // If not found in parent's children, check parent nodes themselves (for nested components like Card/Container)
+      if (!node) {
+        for (let depth = $anchor.depth; depth > 0; depth--) {
+          const nodeAtDepth = $anchor.node(depth)
+          const nodeTypeName = nodeAtDepth.type.name
+          
+          // Check if this is a UI component (not doc, paragraph, or other standard nodes)
+          if (uiComponentTypes.includes(nodeTypeName)) {
+            node = nodeAtDepth
+            nodeId = nodeAtDepth.attrs.id || null
+            break
+          }
+        }
+      }
+
+      // Also check nodes at the exact position (for atom nodes)
+      const pos = $anchor.pos
+      if (!node && pos >= 0 && pos < state.doc.content.size) {
+        const nodeAtPos = state.doc.nodeAt(pos)
+        if (nodeAtPos && uiComponentTypes.includes(nodeAtPos.type.name)) {
+          node = nodeAtPos
+          nodeId = nodeAtPos.attrs.id || null
         }
       }
 
@@ -39,6 +69,9 @@ export const useComponentSelection = (editor: Editor | null) => {
 
     editor.on('selectionUpdate', handleSelectionUpdate)
     editor.on('transaction', handleSelectionUpdate)
+    
+    // Initial check
+    handleSelectionUpdate()
 
     return () => {
       editor.off('selectionUpdate', handleSelectionUpdate)

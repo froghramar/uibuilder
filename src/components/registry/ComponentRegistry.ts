@@ -8,7 +8,18 @@ class ComponentRegistry implements IComponentRegistry {
   }
 
   get(id: string): ComponentDefinition | undefined {
-    return this.components.get(id)
+    // First try direct lookup by id
+    let def = this.components.get(id)
+    if (def) return def
+    
+    // If not found, try to find by extension name
+    for (const component of this.components.values()) {
+      if (component.extension.name === id) {
+        return component
+      }
+    }
+    
+    return undefined
   }
 
   getAll(): ComponentDefinition[] {

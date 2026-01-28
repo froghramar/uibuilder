@@ -1,6 +1,7 @@
 .ui-button-wrapper {
   margin: 8px 0;
   position: relative;
+  cursor: pointer;
 }
 
 .ui-button-wrapper[data-selected="true"] {
