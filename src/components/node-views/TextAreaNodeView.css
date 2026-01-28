@@ -1,0 +1,74 @@
+.ui-textarea-wrapper {
+  margin: 8px 0;
+  position: relative;
+}
+
+.ui-textarea-wrapper[data-selected="true"] {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.ui-textarea-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ui-textarea-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  display: block;
+}
+
+.ui-textarea-label-edit {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border: 1px dashed #d1d5db;
+  border-radius: 4px;
+  background: transparent;
+  width: 100%;
+  font-family: inherit;
+}
+
+.ui-textarea-label-edit:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.ui-textarea-required {
+  color: #ef4444;
+  margin-left: 2px;
+}
+
+.ui-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+  background: white;
+  color: #111827;
+  resize: vertical;
+  transition: all 0.2s;
+}
+
+.ui-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.ui-textarea--disabled {
+  background: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.ui-textarea::placeholder {
+  color: #9ca3af;
+}

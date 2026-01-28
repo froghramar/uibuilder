@@ -48,6 +48,25 @@ const PropertyPanel = ({ editor }: PropertyPanelProps) => {
   }
 
   const renderPropertyInput = (key: string, value: any, schema?: any) => {
+    // Handle array values (like options in Select component)
+    if (Array.isArray(value) && key === 'options') {
+      return (
+        <textarea
+          value={value.join('\n')}
+          onChange={(e) => {
+            const options = e.target.value
+              .split('\n')
+              .map(opt => opt.trim())
+              .filter(opt => opt.length > 0)
+            updateAttribute(key, options.length > 0 ? options : ['Option 1'])
+          }}
+          className="property-textarea"
+          rows={4}
+          placeholder="One option per line"
+        />
+      )
+    }
+
     if (!schema) {
       // Default to text input
       return (

@@ -1,2 +1,7 @@
 export { ButtonExtension } from './ButtonExtension'
+export { InputExtension } from './InputExtension'
+export { TextAreaExtension } from './TextAreaExtension'
+export { SelectExtension } from './SelectExtension'
+export { CardExtension } from './CardExtension'
+export { ContainerExtension } from './ContainerExtension'
 export { BaseUIExtension } from './BaseUIExtension'

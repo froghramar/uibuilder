@@ -76,6 +76,14 @@
   pointer-events: none;
 }
 
+.editor-canvas.drag-over {
+  background-color: #eff6ff;
+}
+
+.editor-canvas.drag-over::before {
+  opacity: 0.5;
+}
+
 .tiptap-editor-content {
   position: relative;
   z-index: 1;

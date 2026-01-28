@@ -1,0 +1,78 @@
+.ui-card-wrapper {
+  margin: 16px 0;
+  position: relative;
+}
+
+.ui-card-wrapper[data-selected="true"] {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.ui-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ui-card-wrapper--shadow .ui-card {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.ui-card-header {
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.ui-card-wrapper--padding-small .ui-card-header {
+  padding: 8px 12px;
+}
+
+.ui-card-wrapper--padding-medium .ui-card-header {
+  padding: 16px;
+}
+
+.ui-card-wrapper--padding-large .ui-card-header {
+  padding: 24px;
+}
+
+.ui-card-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.ui-card-title-edit {
+  width: 100%;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border: 1px dashed #d1d5db;
+  border-radius: 4px;
+  background: transparent;
+  font-family: inherit;
+}
+
+.ui-card-title-edit:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.ui-card-content {
+  min-height: 60px;
+}
+
+.ui-card-wrapper--padding-small .ui-card-content {
+  padding: 8px 12px;
+}
+
+.ui-card-wrapper--padding-medium .ui-card-content {
+  padding: 16px;
+}
+
+.ui-card-wrapper--padding-large .ui-card-content {
+  padding: 24px;
+}

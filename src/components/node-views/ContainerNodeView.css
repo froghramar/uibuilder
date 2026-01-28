@@ -1,0 +1,48 @@
+.ui-container-wrapper {
+  margin: 8px 0;
+  position: relative;
+  min-height: 60px;
+}
+
+.ui-container-wrapper[data-selected="true"] {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.ui-container {
+  display: flex;
+  width: 100%;
+}
+
+.ui-container-wrapper--direction-vertical .ui-container {
+  flex-direction: column;
+}
+
+.ui-container-wrapper--direction-horizontal .ui-container {
+  flex-direction: row;
+}
+
+.ui-container-wrapper--gap-small .ui-container {
+  gap: 8px;
+}
+
+.ui-container-wrapper--gap-medium .ui-container {
+  gap: 16px;
+}
+
+.ui-container-wrapper--gap-large .ui-container {
+  gap: 24px;
+}
+
+.ui-container-wrapper--padding-small .ui-container {
+  padding: 8px;
+}
+
+.ui-container-wrapper--padding-medium .ui-container {
+  padding: 16px;
+}
+
+.ui-container-wrapper--padding-large .ui-container {
+  padding: 24px;
+}
