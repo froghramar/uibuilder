@@ -15,6 +15,7 @@ import { componentRegistry } from '../registry/ComponentRegistry'
 import { ComponentDefinition } from '../../types/component'
 import { useEffect, useCallback } from 'react'
 import { exportToJSON, exportToHTML, exportToReact, downloadFile } from '../../utils/export'
+import { importFile } from '../../utils/import'
 import './UIBuilderEditor.css'
 
 // Register all components
@@ -278,6 +279,28 @@ const UIBuilderEditor = () => {
     target.classList.remove('drag-over')
   }, [])
 
+  const handleImportClick = useCallback(() => {
+    if (!editor) return
+
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = '.json,application/json'
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0]
+      if (!file) return
+
+      const success = await importFile(editor, file)
+      if (success) {
+        // Optional: Show success message
+        console.log('File imported successfully')
+      } else {
+        // Optional: Show error message
+        alert('Failed to import file. Please ensure it is a valid JSON file exported from this UI builder.')
+      }
+    }
+    input.click()
+  }, [editor])
+
   if (!editor) {
     return <div>Loading editor...</div>
   }
@@ -308,6 +331,13 @@ const UIBuilderEditor = () => {
           <div className="toolbar-divider" />
           <div className="toolbar-group">
             <button
+              onClick={handleImportClick}
+              className="toolbar-button"
+              title="Import JSON file"
+            >
+              📥 Import JSON
+            </button>
+            <button
               onClick={() => {
                 const json = exportToJSON(editor)
                 downloadFile(json, 'ui-builder.json', 'application/json')
@@ -315,7 +345,7 @@ const UIBuilderEditor = () => {
               className="toolbar-button"
               title="Export as JSON"
             >
-              Export JSON
+              📤 Export JSON
             </button>
             <button
               onClick={() => {
