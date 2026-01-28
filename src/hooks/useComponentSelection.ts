@@ -30,7 +30,7 @@ export const useComponentSelection = (editor: Editor | null) => {
       // Check the parent's children to find component nodes
       const parent = $anchor.parent
       if (parent) {
-        parent.forEach((childNode, offset) => {
+        parent.forEach((childNode) => {
           if (uiComponentTypes.includes(childNode.type.name)) {
             node = childNode
             nodeId = childNode.attrs.id || null
